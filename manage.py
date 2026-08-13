@@ -19,4 +19,4 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-## jlkdsj
+## jlkdsjgit config user.email "your-github-email@example.com"

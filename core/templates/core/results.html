@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My results — LessonLoop{% endblock %}
+{% block body_class %}page-portal page-results{% endblock %}
+
+{% block content %}
+<section class="portal-header results-header"><div class="shell portal-header-inner"><div><p class="eyebrow">Your progress</p><h1>Every answer leaves a trail.</h1><p>Look back at what you’ve explored and celebrate the thinking you’ve done.</p></div><a class="button button-ghost" href="{% url 'student_activities' %}">Find an activity <span>→</span></a></div></section>
+
+<section class="portal-content section">
+  <div class="shell">
+    <div class="results-summary-grid">
+      <article class="results-summary-card summary-main"><span>Activities completed</span><b>{{ completed_count|default:results|length|default:0 }}</b><p>Keep the streak going.</p><div class="summary-stars">✦ ✦ ✦</div></article>
+      <article class="results-summary-card"><span>Average score</span><b>{% if average_score %}{{ average_score }}%{% else %}—{% endif %}</b><p>Across your completed activities</p></article>
+      <article class="results-summary-card"><span>Most recent score</span><b>{% if latest_result %}{{ latest_result.percentage }}%{% else %}—{% endif %}</b><p>{% if latest_result %}{{ latest_result.activity.title }}{% else %}Complete an activity to see it here{% endif %}</p></article>
+    </div>
+
+    <section class="panel results-table-panel">
+      <div class="panel-heading"><div><p class="eyebrow">Activity history</p><h2>Your completed work</h2></div><span class="muted-label">{{ results|length }} total</span></div>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead><tr><th>Activity</th><th>Completed</th><th>Score</th><th>Progress</th></tr></thead>
+          <tbody>
+            {% for result in results %}
+              <tr><td><span class="table-activity-icon icon-{{ forloop.counter }}">{% cycle '✦' '◌' '↗' '⌁' %}</span><span><b>{{ result.activity.title|default:'Activity' }}</b><small>Interactive learning</small></span></td><td>{{ result.date_completed|date:'M j, Y' }}</td><td><strong>{{ result.percentage|default:0 }}%</strong></td><td><div class="table-progress"><i style="width: {{ result.percentage|default:0 }}%"></i></div></td></tr>
+            {% empty %}
+              <tr><td colspan="4"><div class="empty-state table-empty"><div class="empty-icon">✦</div><h3>Your story starts here.</h3><p>Complete an activity and your progress will appear in this space.</p><a class="button button-small" href="{% url 'student_activities' %}">Explore activities</a></div></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</section>
+{% endblock %}

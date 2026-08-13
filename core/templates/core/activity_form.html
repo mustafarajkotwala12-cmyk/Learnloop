@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Create activity — LessonLoop{% endblock %}
+{% block body_class %}page-builder{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="builder-topbar">
+  <div class="shell builder-topbar-inner">
+    <a class="back-link" href="{% url 'teacher_dashboard' %}">← Back to studio</a>
+    <span class="builder-save-note"><i></i> Your changes are saved when you publish</span>
+  </div>
+</section>
+
+<form class="builder-layout" method="post" data-activity-form>
+  {% csrf_token %}
+  <div class="shell">
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    <section class="builder-intro">
+      <p class="eyebrow">Activity builder</p>
+      <h1>Create a moment worth joining.</h1>
+      <p>Give it a clear purpose, then add the blocks that help learners think, respond, and reflect.</p>
+    </section>
+
+    <section class="builder-details panel">
+      <div class="panel-heading"><div><p class="eyebrow">The basics</p><h2>Name your activity</h2></div><span class="step-badge">1 of 2</span></div>
+      <div class="form-grid">
+        {% if form.title %}
+          <div class="field field-wide"><label for="{{ form.title.id_for_label }}">{{ form.title.label|default:'Activity title' }}</label>{{ form.title }}{% if form.title.help_text %}<small>{{ form.title.help_text }}</small>{% endif %}{{ form.title.errors }}</div>
+        {% else %}
+          <div class="field field-wide"><label for="id_title">Activity title</label><input id="id_title" name="title" type="text" required placeholder="e.g. The water cycle, in motion"></div>
+        {% endif %}
+        {% if form.description %}<div class="field field-wide"><label for="{{ form.description.id_for_label }}">{{ form.description.label|default:'A short description' }}</label>{{ form.description }}{{ form.description.errors }}</div>{% endif %}
+        {% if form.estimated_minutes %}<div class="field"><label for="{{ form.estimated_minutes.id_for_label }}">{{ form.estimated_minutes.label|default:'Estimated minutes' }}</label>{{ form.estimated_minutes }}<small>How long should learners plan for?</small>{{ form.estimated_minutes.errors }}</div>{% endif %}
+        {% if form.is_public %}<div class="field field-toggle">{{ form.is_public }}<label for="{{ form.is_public.id_for_label }}"><b>Share in the public library</b><small>Let other teachers discover and reuse this activity.</small></label>{{ form.is_public.errors }}</div>{% endif %}
+      </div>
+    </section>
+
+    <section class="builder-blocks panel" data-block-builder>
+      <div class="panel-heading"><div><p class="eyebrow">Learning flow</p><h2>Add your first blocks.</h2><p>Use a mix of explanation and interaction to keep the rhythm moving.</p></div><span class="step-badge">2 of 2</span></div>
+      <div class="block-toolbar" aria-label="Add an activity block">
+        <button type="button" class="block-add block-add-text" data-add-block="text"><span>✎</span><b>Explain</b><small>Text prompt</small></button>
+        <button type="button" class="block-add block-add-question" data-add-block="question"><span>?</span><b>Ask</b><small>Quick check</small></button>
+        <button type="button" class="block-add block-add-image" data-add-block="image"><span>◒</span><b>Show</b><small>Image or video</small></button>
+      </div>
+      <div class="builder-canvas" data-builder-canvas>
+        <div class="builder-empty" data-builder-empty><span>✦</span><h3>Begin with a block.</h3><p>Add an explanation, a question, or a visual to shape the learning journey.</p></div>
+      </div>
+      {% if form.content_json %}<div class="visually-hidden">{{ form.content_json }}</div>{% else %}<textarea class="visually-hidden" data-content-json name="content_json">[]</textarea>{% endif %}
+      <div class="builder-actions"><a class="button button-ghost" href="{% url 'teacher_dashboard' %}">Cancel</a><button class="button button-large" type="submit" data-publish-activity>Publish activity <span aria-hidden="true">→</span></button></div>
+    </section>
+  </div>
+</form>
+{% endblock %}

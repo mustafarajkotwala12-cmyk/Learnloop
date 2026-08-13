@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Class insights — LessonLoop{% endblock %}
+{% block body_class %}page-portal page-evaluation{% endblock %}
+
+{% block content %}
+<section class="portal-header evaluation-header">
+  <div class="shell portal-header-inner"><div><p class="eyebrow">Class insights</p><h1>See the learning take shape.</h1><p>Use the signals, not just the scores, to decide what comes next.</p></div><a class="button button-ghost" href="{% url 'teacher_dashboard' %}">← Back to studio</a></div>
+</section>
+
+<section class="portal-content section">
+  <div class="shell">
+    <div class="insight-overview">
+      <article class="insight-card insight-card-main"><span>Average score</span><b>{% if average_score %}{{ average_score }}%{% else %}—{% endif %}</b><p>{% if score_change %}<i class="trend-up">↑ {{ score_change }}%</i> from previous activity{% else %}Across completed activities{% endif %}</p><div class="ring-chart"><span>{% if average_score %}{{ average_score }}{% else %}0{% endif %}</span></div></article>
+      <article class="insight-card"><span>Completed</span><b>{{ completed_count|default:result_count|default:0 }}</b><p>Responses recorded</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+      <article class="insight-card"><span>Activities with results</span><b>{{ activity_count|default:0 }}</b><p>Ready for reflection</p><div class="mini-dots"><i></i><i></i><i></i><i></i><i></i></div></article>
+    </div>
+
+    <div class="evaluation-grid">
+      <section class="panel score-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Performance snapshot</p><h2>Recent responses</h2></div><span class="muted-label">Latest first</span></div>
+        <div class="score-list">
+          {% for result in results|slice:':8' %}
+            <article class="score-row"><span class="person-avatar avatar-{{ forloop.counter }}">{{ result.student.get_full_name|default:result.student.email|default:'S'|slice:':1'|upper }}</span><div class="score-person"><b>{{ result.student.get_full_name|default:result.student.email|default:'Learner' }}</b><small>{{ result.activity.title|default:'Activity' }} · {{ result.date_completed|date:'M j, Y' }}</small></div><div class="score-bar-wrap"><div class="score-bar"><i style="width: {{ result.percentage|default:0 }}%"></i></div><strong>{{ result.percentage|default:0 }}%</strong></div></article>
+          {% empty %}
+            <div class="empty-inline slim"><span class="empty-icon">↗</span><div><h3>Insights are on their way.</h3><p>Results appear here as learners complete an activity.</p></div></div>
+          {% endfor %}
+        </div>
+      </section>
+      <aside class="panel grade-panel">
+        <p class="eyebrow">Bring in a grade</p><h2>Add a result manually.</h2><p>Use this for an offline activity or a score you collected elsewhere.</p>
+        <form method="post" enctype="multipart/form-data" class="compact-form">
+          {% csrf_token %}
+          {% if grade_form %}
+            {{ grade_form.as_p }}
+          {% else %}
+            <div class="field"><label for="manual-student">Learner</label><input id="manual-student" name="student" type="text" placeholder="Name or email"></div>
+            <div class="field"><label for="manual-score">Score</label><input id="manual-score" name="score" type="number" min="0" max="100" placeholder="0–100"></div>
+          {% endif %}
+          <button class="button button-full" type="submit">Save result</button>
+        </form>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

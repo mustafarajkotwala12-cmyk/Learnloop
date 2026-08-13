@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Activities — LessonLoop{% endblock %}
+{% block body_class %}page-portal page-student-activities{% endblock %}
+
+{% block content %}
+<section class="activities-hero">
+  <div class="shell activities-hero-inner">
+    <div><p class="eyebrow">Activity hub</p><h1>Choose something to explore.</h1><p>Each activity is a small space to think, try, and notice what you know.</p></div>
+    <a class="button button-ghost" href="{% url 'student_dashboard' %}">← My learning</a>
+  </div>
+</section>
+
+<section class="section activities-library">
+  <div class="shell">
+    <div class="activities-toolbar"><p><b>{{ activities|length }}</b> activity{{ activities|length|pluralize }} ready for you</p><span class="muted-label">Complete at your own pace</span></div>
+    <div class="activities-grid">
+      {% for activity in activities %}
+        <article class="activity-choice-card activity-choice-tone-{{ forloop.counter }}">
+          <div class="choice-card-top"><span class="choice-symbol">{% cycle '✦' '◒' '⌁' '△' %}</span>{% if activity.pk in completed_ids %}<span class="complete-chip">✓ Completed</span>{% else %}<span class="topic-chip">Interactive</span>{% endif %}</div>
+          <div class="choice-card-copy"><p>{% if activity.author.get_full_name %}By {{ activity.author.get_full_name }}{% else %}LessonLoop activity{% endif %}</p><h2>{{ activity.title }}</h2><span>{% if activity.description %}{{ activity.description|truncatechars:100 }}{% else %}Take this short activity at a pace that suits you.{% endif %}</span></div>
+          <a class="choice-card-link" href="{% url 'student_activity_play' activity.pk %}">{% if activity.pk in completed_ids %}Try again{% else %}Start activity{% endif %} <b>→</b></a>
+        </article>
+      {% empty %}
+        <div class="empty-state library-empty"><div class="empty-icon">✦</div><h2>Your activity shelf is clear.</h2><p>When a teacher shares an activity, it will appear here.</p><a class="button button-small" href="{% url 'student_dashboard' %}">Back to my learning</a></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ activity.title|default:'Activity' }} — LessonLoop{% endblock %}
+{% block body_class %}page-player{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="player-shell" data-activity-player>
+  <header class="player-header">
+    <a class="brand" href="{% url 'student_activities' %}"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Lesson<span>Loop</span></span></a>
+    <div class="player-title"><span>ACTIVITY</span><b>{{ activity.title|default:'Learning activity' }}</b></div>
+    <a class="button button-quiet button-small" href="{% url 'student_dashboard' %}">Save &amp; exit</a>
+  </header>
+
+  <form method="post" action="{% url 'student_complete_activity' activity.pk %}" class="player-content" data-quiz-form>
+    {% csrf_token %}
+    {% if session %}<input type="hidden" name="session_id" value="{{ session.pk }}">{% endif %}
+    <input type="hidden" name="answers" value="{}" data-answer-payload>
+    <div class="player-progress" aria-label="Activity progress"><div class="player-progress-track"><i data-player-progress></i></div><span data-player-progress-label>Get started</span></div>
+    <div class="player-stage">
+      <div class="player-kicker"><span class="player-dot"></span> Take your time. There’s no rush.</div>
+      <div class="player-blocks">
+        {% for block in blocks %}
+          {% if block.type == 'question' or block.block_type == 'question' %}
+            <section class="question-card" data-question-card data-question-index="{{ forloop.counter0 }}">
+              <span class="block-label">QUICK CHECK {{ forloop.counter }}</span>
+              <h1>{{ block.question|default:block.heading|default:'What do you think?' }}</h1>
+              {% if block.body %}<p class="question-context">{{ block.body }}</p>{% endif %}
+              <div class="answer-options">
+                {% for choice in block.choices %}
+                  <label class="answer-option"><input type="radio" name="answer_{{ forloop.parentloop.counter0 }}" value="{{ forloop.counter0 }}"><span class="option-letter">{% cycle 'A' 'B' 'C' 'D' 'E' %}</span><span>{{ choice }}</span><i class="answer-check">✓</i></label>
+                {% empty %}
+                  <label class="answer-option"><input type="radio" name="answer_{{ forloop.parentloop.counter0 }}" value="0"><span class="option-letter">A</span><span>Option one</span><i class="answer-check">✓</i></label>
+                  <label class="answer-option"><input type="radio" name="answer_{{ forloop.parentloop.counter0 }}" value="1"><span class="option-letter">B</span><span>Option two</span><i class="answer-check">✓</i></label>
+                {% endfor %}
+              </div>
+            </section>
+          {% elif block.type == 'image' or block.block_type == 'image' %}
+            <section class="content-card media-content-card"><span class="block-label">LOOK CLOSER</span><h1>{{ block.heading|default:'Take a closer look.' }}</h1>{% if block.body %}<p>{{ block.body }}</p>{% endif %}{% if block.media_url %}<img src="{{ block.media_url }}" alt="{{ block.alt_text|default:block.heading }}">{% else %}<div class="media-placeholder"><span>◒</span><small>Add an image or video to this block</small></div>{% endif %}</section>
+          {% else %}
+            <section class="content-card"><span class="block-label">THINK IT THROUGH</span><h1>{{ block.heading|default:'Pause and consider this.' }}</h1><p>{{ block.body|default:block.text|default:'Read the prompt, talk it through, and keep the key idea in mind as you move on.' }}</p></section>
+          {% endif %}
+        {% empty %}
+          <section class="content-card"><span class="block-label">WELCOME</span><h1>This activity is getting ready.</h1><p>Your teacher hasn’t added any blocks yet. Check back shortly or return to your activity hub.</p><a class="button" href="{% url 'student_activities' %}">Back to activities</a></section>
+        {% endfor %}
+      </div>
+    </div>
+    {% if blocks %}<footer class="player-footer"><span><i></i> Your answers are saved when you finish.</span><button type="submit" class="button button-large">Finish activity <span>→</span></button></footer>{% endif %}
+  </form>
+</section>
+{% endblock %}

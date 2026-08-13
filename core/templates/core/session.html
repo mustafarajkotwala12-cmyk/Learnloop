@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Live session — LessonLoop{% endblock %}
+{% block body_class %}page-live-session{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="live-session" data-live-session>
+  <div class="live-topbar">
+    <a class="brand brand-on-dark" href="{% url 'teacher_dashboard' %}"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Lesson<span>Loop</span></span></a>
+    <div class="live-session-name"><span class="live-dot"></span><span><b>Live session</b><small>{{ session.activity.title|default:activity.title|default:'Activity room' }}</small></span></div>
+    <form method="post" class="end-session-form">{% csrf_token %}<button class="button button-dark-quiet button-small" type="submit">End session</button></form>
+  </div>
+  <div class="live-room-content">
+    <div class="live-label"><span class="live-dot"></span> Join the activity</div>
+    <p class="live-instruction">Ask learners to enter this code at <b>LessonLoop</b></p>
+    <button class="join-code" type="button" data-copy-code data-code="{{ session.join_code|default:'ABC123' }}" aria-label="Copy join code {{ session.join_code|default:'ABC123' }}"><span>{{ session.join_code|default:'ABC123' }}</span><small>Tap to copy</small></button>
+    <div class="live-stats"><span><b>{{ participant_count|default:0 }}</b> learners in room</span><i></i><span><b>{{ response_count|default:0 }}</b> responses received</span></div>
+    <div class="live-qr" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div class="live-corner live-corner-left"></div><div class="live-corner live-corner-right"></div>
+</section>
+{% endblock %}

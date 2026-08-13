@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Learn together through focused, interactive activities.">
+  <title>{% block title %}LessonLoop{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'core/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header" data-site-header>
+    <div class="shell nav-shell">
+      <a class="brand" href="{% url 'landing' %}" aria-label="LessonLoop home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>Lesson<span>Loop</span></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle>
+        <span class="sr-only">Toggle navigation</span>
+        <i></i><i></i><i></i>
+      </button>
+
+      <nav id="primary-nav" class="primary-nav" aria-label="Primary navigation" data-primary-nav>
+        {% if user.is_authenticated %}
+          {% if user.role == 'TEACHER' %}
+            <a href="{% url 'teacher_dashboard' %}">My studio</a>
+            <a href="{% url 'activity_create' %}">Create activity</a>
+            <a href="{% url 'teacher_evaluation' %}">Class insights</a>
+          {% else %}
+            <a href="{% url 'student_dashboard' %}">My learning</a>
+            <a href="{% url 'student_activities' %}">Activities</a>
+            <a href="{% url 'student_results' %}">Results</a>
+          {% endif %}
+          <form class="nav-logout" action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="button button-quiet button-small" type="submit">Sign out</button>
+          </form>
+        {% else %}
+          <a href="{% url 'browse' %}">Explore activities</a>
+          <a href="{% url 'landing' %}#how-it-works">How it works</a>
+          <a class="button button-small" href="{% url 'login' %}">Sign in</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  {% if messages %}
+    <div class="flash-stack shell" aria-live="polite" aria-atomic="true">
+      {% for message in messages %}
+        <div class="flash flash-{{ message.tags|default:'info' }}" data-flash>
+          <span>{{ message }}</span>
+          <button type="button" class="icon-button" aria-label="Dismiss message" data-flash-dismiss>&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <a class="brand brand-footer" href="{% url 'landing' %}">
+            <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>Lesson<span>Loop</span></span>
+          </a>
+          <p>Small moments of interaction make learning stick.</p>
+        </div>
+        <div class="footer-links">
+          <a href="{% url 'browse' %}">Browse activities</a>
+          {% if user.is_authenticated and user.role == 'TEACHER' %}
+            <a href="{% url 'teacher_evaluation' %}">Class insights</a>
+          {% elif user.is_authenticated %}
+            <a href="{% url 'student_results' %}">Progress</a>
+          {% else %}
+            <a href="{% url 'login' %}">Sign in</a>
+          {% endif %}
+        </div>
+        <p class="footer-note">Built for curious classrooms.</p>
+      </div>
+    </footer>
+  {% endblock %}
+
+  <script src="{% static 'core/app.js' %}" defer></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

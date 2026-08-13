@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Welcome back — LessonLoop{% endblock %}
+{% block body_class %}page-login{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+  <aside class="auth-aside">
+    <a class="brand brand-on-dark" href="{% url 'landing' %}"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Lesson<span>Loop</span></span></a>
+    <div class="auth-aside-copy"><p class="eyebrow eyebrow-light">Learning, together</p><h1>A lesson is better when every voice has a way in.</h1><div class="auth-aside-quote"><span>“</span><p>The easiest way I’ve found to turn a quiet room into an active one.</p></div></div>
+    <div class="auth-spark spark-a"></div><div class="auth-spark spark-b"></div><div class="auth-spark spark-c"></div>
+  </aside>
+  <div class="auth-main">
+    <div class="auth-card">
+      <a class="back-link" href="{% url 'landing' %}">← Back to home</a>
+      <div class="auth-intro">
+        {% if mode == 'register' %}
+          <p class="eyebrow">Join LessonLoop</p><h2>Make your learning space.</h2><p>Choose how you’ll use LessonLoop, then you’re ready to begin.</p>
+        {% else %}
+          <p class="eyebrow">Welcome back</p><h2>Sign in to continue.</h2><p>Pick up right where the learning left off.</p>
+        {% endif %}
+      </div>
+      {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+      <form method="post" action="{% if mode == 'register' %}{% url 'register' %}{% else %}{% url 'login' %}{% endif %}" class="auth-form">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {% if mode == 'register' %}
+          <div class="auth-name-grid">
+            <div class="field"><label for="{{ form.first_name.id_for_label }}">First name</label>{{ form.first_name }}{{ form.first_name.errors }}</div>
+            <div class="field"><label for="{{ form.last_name.id_for_label }}">Last name</label>{{ form.last_name }}{{ form.last_name.errors }}</div>
+          </div>
+          <div class="field"><label for="{{ form.email.id_for_label }}">Email address</label>{{ form.email }}{{ form.email.errors }}</div>
+          <fieldset class="role-picker"><legend>I’m here as a…</legend>{{ form.role }}{{ form.role.errors }}</fieldset>
+          <div class="field"><label for="{{ form.password1.id_for_label }}">Create a password</label>{{ form.password1 }}{{ form.password1.errors }}</div>
+          <div class="field"><label for="{{ form.password2.id_for_label }}">Confirm password</label>{{ form.password2 }}{{ form.password2.errors }}</div>
+          <button class="button button-large button-full" type="submit">Create account <span aria-hidden="true">→</span></button>
+        {% else %}
+          {% if form.username %}
+            <div class="field"><label for="{{ form.username.id_for_label }}">Email address</label>{{ form.username }}{{ form.username.errors }}</div>
+          {% elif form.email %}
+            <div class="field"><label for="{{ form.email.id_for_label }}">Email address</label>{{ form.email }}{{ form.email.errors }}</div>
+          {% else %}
+            <div class="field"><label for="id_username">Email address</label><input id="id_username" name="username" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+          {% endif %}
+          {% if form.password %}
+            <div class="field field-password"><div class="label-row"><label for="{{ form.password.id_for_label }}">Password</label><a href="#help">Forgot password?</a></div>{{ form.password }}{{ form.password.errors }}</div>
+          {% else %}
+            <div class="field field-password"><div class="label-row"><label for="id_password">Password</label><a href="#help">Forgot password?</a></div><input id="id_password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••"></div>
+          {% endif %}
+          <button class="button button-large button-full" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        {% endif %}
+      </form>
+      {% if google_login_url %}
+        <div class="auth-divider"><span>or continue with</span></div>
+        <a class="button button-social button-full" href="{{ google_login_url }}"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.8 3-4.3 3-7.3Z"/><path fill="#34A853" d="M12 22c2.7 0 5-0.9 6.6-2.5l-3.2-2.5c-.9.6-2 .9-3.4.9-2.6 0-4.8-1.7-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 13.8a6 6 0 0 1 0-3.6V7.6H3.1a10 10 0 0 0 0 8.8l3.3-2.6Z"/><path fill="#EA4335" d="M12 6.1c1.5 0 2.8.5 3.8 1.5l2.9-2.8A10 10 0 0 0 3.1 7.6l3.3 2.6C7.2 7.8 9.4 6.1 12 6.1Z"/></svg>Continue with Google</a>
+      {% endif %}
+      {% if mode == 'register' %}
+        <p id="help" class="auth-help">Already have an account? <a href="{% url 'login' %}">Sign in instead.</a></p>
+      {% else %}
+        <p id="help" class="auth-help">New here? <a href="{% url 'register' %}">Create an account.</a> Or ask your teacher or school administrator to invite you.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

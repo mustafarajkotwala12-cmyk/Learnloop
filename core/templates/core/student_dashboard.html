@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My learning — LessonLoop{% endblock %}
+{% block body_class %}page-portal page-student{% endblock %}
+
+{% block content %}
+<section class="student-welcome">
+  <div class="shell student-welcome-grid">
+    <div><p class="eyebrow">Your learning space</p><h1>Hey, {{ user.first_name|default:user.email|default:'there' }}. Ready for a good question?</h1><p>Jump into an activity, join a live room, or see the progress you’ve already made.</p></div>
+    <button class="join-live-card" type="button" data-modal-open="join-modal"><span class="join-live-icon">◌</span><span><small>Have a class code?</small><b>Join live quiz</b></span><i>→</i></button>
+  </div>
+</section>
+
+<section class="portal-content section student-content">
+  <div class="shell">
+    <div class="student-progress-banner">
+      <div class="progress-banner-copy"><span class="progress-emoji">✦</span><div><p class="eyebrow">Your recent rhythm</p><h2>{% if completed_count %}{{ completed_count }} activity{{ completed_count|pluralize:'y,ies' }} completed{% else %}Your next activity is waiting{% endif %}</h2><p>{% if average_score %}You’re averaging {{ average_score }}% across your completed work.{% else %}Finish an activity to start building your progress story.{% endif %}</p></div></div>
+      <a class="button button-light" href="{% url 'student_results' %}">View results <span>→</span></a>
+    </div>
+
+    <div class="student-layout">
+      <section class="panel discover-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Ready when you are</p><h2>Choose your next activity.</h2></div><a class="text-link" href="{% url 'student_activities' %}">View all <span>→</span></a></div>
+        <div class="student-activity-grid">
+          {% for activity in activities|slice:':4' %}
+            <article class="student-activity-card student-card-tone-{{ forloop.counter }}"><div class="student-card-symbol">{% cycle '✦' '◒' '⌁' '△' %}</div><span class="topic-chip">Interactive</span><h3>{{ activity.title }}</h3><p>{% if activity.author.get_full_name %}By {{ activity.author.get_full_name }}{% else %}A lesson to explore at your pace{% endif %}</p><a href="{% url 'student_activity_play' activity.pk %}">Start <span>→</span></a></article>
+          {% empty %}
+            <div class="empty-inline student-empty"><span class="empty-icon">✦</span><div><h3>Nothing assigned just yet.</h3><p>Your teacher’s next activity will show up here.</p></div></div>
+          {% endfor %}
+        </div>
+      </section>
+      <aside class="panel learning-history">
+        <div class="panel-heading"><div><p class="eyebrow">Your trail</p><h2>Recent results</h2></div><a class="text-link" href="{% url 'student_results' %}">All</a></div>
+        {% for result in recent_results|slice:':4' %}
+          <div class="history-row"><span class="history-icon icon-{{ forloop.counter }}">{% cycle '✦' '◌' '↗' '⌁' %}</span><div><b>{{ result.activity.title|default:'Activity' }}</b><small>{{ result.date_completed|date:'M j' }}</small></div><strong>{{ result.percentage|default:0 }}%</strong></div>
+        {% empty %}
+          <p class="empty-copy">Complete an activity and your results will be kept here.</p>
+        {% endfor %}
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div id="join-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="join-modal-title" hidden data-modal>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-dialog modal-join">
+    <button type="button" class="modal-close" aria-label="Close" data-modal-close>&times;</button>
+    <div class="modal-orb">◌</div><p class="eyebrow">Live activity</p><h2 id="join-modal-title">Enter your class code.</h2><p>Your teacher’s six-character code connects you to the room.</p>
+    <form action="{% url 'student_join_session' %}" method="post" data-ajax-join>
+      {% csrf_token %}
+      <label class="sr-only" for="join-code-input">Class code</label>
+      <input id="join-code-input" class="join-code-input" name="join_code" type="text" minlength="6" maxlength="6" autocomplete="off" autocapitalize="characters" placeholder="ABC123" required>
+      <p class="form-feedback" data-join-feedback aria-live="polite"></p>
+      <button class="button button-full button-large" type="submit">Join room <span>→</span></button>
+    </form>
+  </div>
+</div>
+{% endblock %}

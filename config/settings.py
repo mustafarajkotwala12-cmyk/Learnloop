@@ -79,6 +79,10 @@ if database_url:
 else:
     DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 
+# Vercel-specific fix for read-only filesystem
+if os.environ.get("VERCEL"):
+    DATABASES["default"]["OPTIONS"] = {"connect_timeout": 5}
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -130,3 +134,4 @@ SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "false").lowe
     "true",
     "yes",
 }
+

@@ -25,11 +25,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
     "core",
 ]
 
@@ -40,7 +35,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -139,21 +133,11 @@ AUTH_USER_MODEL = "core.User"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-SITE_ID = int(os.environ.get("DJANGO_SITE_ID", "1"))
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "portal_redirect"
 LOGOUT_REDIRECT_URL = "landing"
-
-# django-allauth handles the optional Google OAuth flow. A SocialApp for Google
-# must be added in Django admin (or through a data migration) before it is live.
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-SOCIALACCOUNT_AUTO_SIGNUP = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

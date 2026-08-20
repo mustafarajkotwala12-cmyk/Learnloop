@@ -6,43 +6,34 @@
 {% block content %}
 <section class="portal-header">
   <div class="shell portal-header-inner">
-    <div><p class="eyebrow">Teacher studio</p><h1>Good {{ greeting|default:'to see you' }}, {{ user.first_name|default:user.email|default:'teacher' }}.</h1><p>Here’s the pulse of your learning space.</p></div>
-    <a class="button button-large" href="{% url 'activity_create' %}"><span class="button-plus">+</span> Create activity</a>
+    <div><p class="eyebrow">Teacher studio</p><h1>Good {{ greeting|default:'to see you' }}, {{ user.first_name|default:user.email|default:'teacher' }}.</h1><p>Here's the pulse of your learning space.</p></div>
+    <a class="button button-large" href="{% url 'activity_create' %}">+ Create activity</a>
   </div>
 </section>
 
 <section class="portal-content section">
   <div class="shell">
     <div class="stat-grid">
-      <article class="stat-card"><div class="stat-icon stat-icon-indigo">✦</div><div><span>Activities made</span><b>{{ activity_count|default:activities|length|default:0 }}</b><small>Your growing library</small></div></article>
-      <article class="stat-card"><div class="stat-icon stat-icon-mint">◌</div><div><span>Live sessions</span><b>{{ active_session_count|default:session_count|default:0 }}</b><small>Ready or in progress</small></div></article>
-      <article class="stat-card"><div class="stat-icon stat-icon-sun">↗</div><div><span>Responses</span><b>{{ result_count|default:0 }}</b><small>Across your activities</small></div></article>
-      <article class="stat-card stat-card-highlight"><div class="stat-icon stat-icon-rose">◎</div><div><span>Average score</span><b>{% if average_score %}{{ average_score }}%{% else %}—{% endif %}</b><small>Most recent results</small></div></article>
+      <article class="stat-card"><div><span>Activities made</span><b>{{ activity_count|default:activities|length|default:0 }}</b></div></article>
+      <article class="stat-card"><div><span>Live sessions</span><b>{{ active_session_count|default:session_count|default:0 }}</b></div></article>
+      <article class="stat-card"><div><span>Responses</span><b>{{ result_count|default:0 }}</b></div></article>
+      <article class="stat-card stat-card-highlight"><div><span>Average score</span><b>{% if average_score %}{{ average_score }}%{% else %}—{% endif %}</b></div></article>
     </div>
 
-    <div class="portal-grid portal-grid-main">
-      <section class="panel activity-panel">
-        <div class="panel-heading"><div><p class="eyebrow">Your activity shelf</p><h2>Keep the momentum going.</h2></div><a class="text-link" href="{% url 'activity_create' %}">Create new <span>→</span></a></div>
-        <div class="teacher-activity-list">
-          {% for activity in activities|slice:':5' %}
-            <article class="teacher-activity-row">
-              <span class="activity-dot tone-{{ forloop.counter }}"></span>
-              <div><h3>{{ activity.title }}</h3><p>{% if activity.is_public %}Public activity{% else %}Private activity{% endif %} · Ready to share</p></div>
-              <span class="activity-row-status">{{ activity.result_count|default:'0' }} responses</span>
-              <form class="start-session-form" action="{% url 'teacher_start_session' activity.pk %}" method="post">{% csrf_token %}<button class="button button-quiet button-small" type="submit">Start live</button></form>
-            </article>
-          {% empty %}
-            <div class="empty-inline"><span class="empty-icon">✎</span><div><h3>Your shelf is waiting.</h3><p>Create a first activity and make the next lesson more interactive.</p></div><a class="button button-small" href="{% url 'activity_create' %}">Create one</a></div>
-          {% endfor %}
-        </div>
-      </section>
-
-      <aside class="panel quick-panel">
-        <p class="eyebrow">Quick start</p><h2>What do you want to do?</h2>
-        <a class="quick-action quick-action-primary" href="{% url 'activity_create' %}"><span class="quick-action-icon">+</span><span><b>Build an activity</b><small>Start with a prompt, question, or media.</small></span><i>→</i></a>
-        <a class="quick-action" href="{% url 'teacher_evaluation' %}"><span class="quick-action-icon">↗</span><span><b>Review class insights</b><small>See where learners are landing.</small></span><i>→</i></a>
-      </aside>
-    </div>
+    <section class="panel activity-panel">
+      <div class="panel-heading"><div><p class="eyebrow">Your activity shelf</p><h2>Keep the momentum going.</h2></div><a class="text-link" href="{% url 'activity_create' %}">Create new <span>→</span></a></div>
+      <div class="teacher-activity-list">
+        {% for activity in activities|slice:':5' %}
+          <article class="teacher-activity-row">
+            <div><h3>{{ activity.title }}</h3><p>{% if activity.is_public %}Public activity{% else %}Private activity{% endif %} · Ready to share</p></div>
+            <span class="activity-row-status">{{ activity.result_count|default:'0' }} responses</span>
+            <form class="start-session-form" action="{% url 'teacher_start_session' activity.pk %}" method="post">{% csrf_token %}<button class="button button-quiet button-small" type="submit">Start live</button></form>
+          </article>
+        {% empty %}
+          <div class="empty-inline"><div><h3>Your shelf is waiting.</h3><p>Create a first activity and make the next lesson more interactive.</p></div><a class="button button-small" href="{% url 'activity_create' %}">Create one</a></div>
+        {% endfor %}
+      </div>
+    </section>
 
     <div class="portal-grid portal-grid-bottom">
       <section class="panel sessions-panel">
@@ -55,7 +46,7 @@
               {% if session.is_active %}<a class="button button-quiet button-small" href="{% url 'teacher_session' session.pk %}">Open room</a>{% else %}<span class="muted-label">Complete</span>{% endif %}
             </article>
           {% empty %}
-            <div class="empty-inline slim"><span class="empty-icon">◌</span><div><h3>No live rooms yet.</h3><p>Start one from an activity when your class is ready.</p></div></div>
+            <div class="empty-inline slim"><div><h3>No live rooms yet.</h3><p>Start one from an activity when your class is ready.</p></div></div>
           {% endfor %}
         </div>
       </section>

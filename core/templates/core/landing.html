@@ -9,7 +9,7 @@
     <div class="hero-copy">
       <p class="eyebrow"><span class="eyebrow-dot"></span> Built for live, lively learning</p>
       <h1>Turn lesson time into <em>everyone</em> time.</h1>
-      <p class="hero-lede">Create bite-sized activities, bring them to the front of the room, and see every learner’s thinking as it happens.</p>
+      <p class="hero-lede">Create bite-sized activities, bring them to the front of the room, and see every learner's thinking as it happens.</p>
       <div class="button-row">
         {% if user.is_authenticated and user.role == 'TEACHER' %}
           <a class="button button-large" href="{% url 'activity_create' %}">Create an activity <span aria-hidden="true">→</span></a>
@@ -20,35 +20,8 @@
           <a class="button button-ghost button-large" href="{% url 'browse' %}">Explore activities</a>
         {% endif %}
       </div>
-      <div class="hero-proof" aria-label="Platform highlights">
-        <span><b>3 min</b> to your first activity</span>
-        <span><b>Live</b> class check-ins</span>
-      </div>
-    </div>
-
-    <div class="hero-visual" aria-label="Preview of an interactive lesson">
-      <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
-      <div class="lesson-preview">
-        <div class="preview-topline"><span class="preview-avatar">AM</span><span>Science sprint</span><i></i><span class="status-pill"><b></b> Live</span></div>
-        <div class="preview-question">
-          <span class="preview-step">QUESTION 02 / 04</span>
-          <h2>What gives a plant the energy to grow?</h2>
-          <div class="preview-options">
-            <div><span>A</span> Moonlight</div>
-            <div class="selected"><span>B</span> Sunlight <strong>✓</strong></div>
-            <div><span>C</span> Soil alone</div>
-          </div>
-        </div>
-        <div class="preview-bottom"><span><b>24</b> responses</span><span>91% chose B</span></div>
-      </div>
-      <div class="floating-card floating-card-one"><span class="float-icon">✦</span><b>Nice work!</b><small>23 classmates joined</small></div>
-      <div class="floating-card floating-card-two"><span class="mini-bars"><i></i><i></i><i></i><i></i></span><span><b>Instant insight</b><small>See the whole room</small></span></div>
     </div>
   </div>
-</section>
-
-<section class="trust-strip">
-  <div class="shell"><p>One calm place for the moments that matter in class</p><div><span>CREATE</span><i></i><span>PLAY</span><i></i><span>NOTICE</span><i></i><span>GROW</span></div></div>
 </section>
 
 <section id="how-it-works" class="section section-soft">
@@ -59,9 +32,9 @@
       <p>Every part of Quizz-Al-Din does one useful thing well—so a great activity never needs a complicated setup.</p>
     </div>
     <div class="steps-grid">
-      <article class="step-card"><span class="step-number">01</span><div class="step-icon icon-lilac">✎</div><h3>Build a spark</h3><p>Mix prompts, media, and quick checks into a focused activity.</p></article>
-      <article class="step-card"><span class="step-number">02</span><div class="step-icon icon-mint">◌</div><h3>Bring in the room</h3><p>Share a six-character code and let everyone join in seconds.</p></article>
-      <article class="step-card"><span class="step-number">03</span><div class="step-icon icon-sun">↗</div><h3>Use what you notice</h3><p>Turn responses into the next helpful teaching move.</p></article>
+      <article class="step-card"><span class="step-number">01</span><h3>Build a spark</h3><p>Mix prompts, media, and quick checks into a focused activity.</p></article>
+      <article class="step-card"><span class="step-number">02</span><h3>Bring in the room</h3><p>Share a six-character code and let everyone join in seconds.</p></article>
+      <article class="step-card"><span class="step-number">03</span><h3>Use what you notice</h3><p>Turn responses into the next helpful teaching move.</p></article>
     </div>
   </div>
 </section>
@@ -75,24 +48,16 @@
     <div class="activity-showcase-grid">
       {% for activity in featured_activities|slice:':3' %}
         <article class="showcase-card showcase-tone-{{ forloop.counter }}">
-          <div class="showcase-card-top"><span class="topic-chip">Interactive activity</span><span>↗</span></div>
+          <div class="showcase-card-top"><span class="topic-chip">Interactive activity</span></div>
           <div><p>BY {{ activity.author.get_full_name|default:activity.author.email|default:'QUIZZ-AL-DIN'|upper }}</p><h3>{{ activity.title }}</h3></div>
           <a href="{% url 'browse' %}" aria-label="Explore {{ activity.title }}"></a>
         </article>
       {% empty %}
-        <article class="showcase-card showcase-tone-1"><div class="showcase-card-top"><span class="topic-chip">Science</span><span>↗</span></div><div><p>QUICK CHECK</p><h3>How do living things get energy?</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
-        <article class="showcase-card showcase-tone-2"><div class="showcase-card-top"><span class="topic-chip">History</span><span>↗</span></div><div><p>STORY STARTER</p><h3>Whose story does a map tell?</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
-        <article class="showcase-card showcase-tone-3"><div class="showcase-card-top"><span class="topic-chip">Math</span><span>↗</span></div><div><p>THINK IT THROUGH</p><h3>Find the pattern, explain the why.</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
+        <article class="showcase-card showcase-tone-1"><div class="showcase-card-top"><span class="topic-chip">Science</span></div><div><p>QUICK CHECK</p><h3>How do living things get energy?</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
+        <article class="showcase-card showcase-tone-2"><div class="showcase-card-top"><span class="topic-chip">History</span></div><div><p>STORY STARTER</p><h3>Whose story does a map tell?</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
+        <article class="showcase-card showcase-tone-3"><div class="showcase-card-top"><span class="topic-chip">Math</span></div><div><p>THINK IT THROUGH</p><h3>Find the pattern, explain the why.</h3></div><a href="{% url 'browse' %}" aria-label="Explore activities"></a></article>
       {% endfor %}
     </div>
-  </div>
-</section>
-
-<section class="section quote-section">
-  <div class="shell quote-layout">
-    <div class="quote-mark">“</div>
-    <blockquote>It feels less like presenting a quiz and more like inviting every student into the conversation.</blockquote>
-    <div class="quote-person"><span class="person-avatar">SR</span><span><b>Samira Rahman</b><small>Year 7 teacher</small></span></div>
   </div>
 </section>
 

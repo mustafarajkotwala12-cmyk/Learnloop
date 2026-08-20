@@ -38,16 +38,6 @@ def _average_percentage(results) -> int | None:
     return round(sum(values) / len(values)) if values else None
 
 
-def _google_login_url() -> str | None:
-    """Only show Google sign-in when a site-bound SocialApp is configured."""
-    try:
-        from allauth.socialaccount.models import SocialApp
-
-        if SocialApp.objects.filter(provider="google", sites__id=settings.SITE_ID).exists():
-            return reverse("google_login")
-    except Exception:  # Database may not be migrated on a freshly unpacked app.
-        return None
-    return None
 
 
 @require_GET
@@ -97,7 +87,6 @@ def login_view(request: HttpRequest) -> HttpResponse:
             "form": form,
             "mode": "login",
             "next": request.GET.get("next", ""),
-            "google_login_url": _google_login_url(),
         },
     )
 
@@ -112,12 +101,12 @@ def register_view(request: HttpRequest) -> HttpResponse:
         # A direct sign-up has not passed through authenticate(), and this app
         # intentionally has Django plus django-allauth authentication backends.
         login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-        messages.success(request, "Your LearnLoop account is ready.")
+        messages.success(request, "Your Quizz-Al-Din account is ready.")
         return redirect("portal_redirect")
     return render(
         request,
         "core/login.html",
-        {"form": form, "mode": "register", "google_login_url": _google_login_url()},
+        {"form": form, "mode": "register"},
     )
 
 

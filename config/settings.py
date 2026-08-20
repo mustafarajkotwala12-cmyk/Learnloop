@@ -76,12 +76,13 @@ if database_url:
             in {"1", "true", "yes"},
         )
     }
+    # Vercel-specific fix: Ensure options is initialized if it wasn't by dj_database_url
+if os.environ.get("VERCEL"):
+        if "OPTIONS" not in DATABASES["default"]:
+            DATABASES["default"]["OPTIONS"] = {}
+        DATABASES["default"]["OPTIONS"]["connect_timeout"] = 5
 else:
     DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
-
-# Vercel-specific fix for read-only filesystem
-if os.environ.get("VERCEL"):
-    DATABASES["default"]["OPTIONS"] = {"connect_timeout": 5}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

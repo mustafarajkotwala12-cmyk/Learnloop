@@ -67,11 +67,27 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # Supabase provides a standard PostgreSQL connection URL. SQLite keeps a fresh
 # clone useful without any cloud credentials.
-database_url = os.environ.get("SUPABASE_DB_URL") or os.environ.get("DATABASE_URL")
-if database_url:
+def _sanitize_db_url(raw_url: str) -> str:
+    """Sanitizes unescaped characters (such as @ or brackets in password) in database URLs."""
+    url = raw_url.strip()
+    import re
+    import urllib.parse
+    match = re.match(r"^(postgres(?:ql)?://)([^:]+):(.*)@([^@/:]+)(?::(\d+))?/(.*)$", url)
+    if match:
+        proto, user, pwd, host, port, dbname = match.groups()
+        if pwd.startswith("[") and pwd.endswith("]"):
+            pwd = pwd[1:-1]
+        quoted_pwd = urllib.parse.quote(pwd)
+        port_part = f":{port}" if port else ""
+        return f"{proto}{user}:{quoted_pwd}@{host}{port_part}/{dbname}"
+    return url
+
+raw_database_url = os.environ.get("SUPABASE_DB_URL") or os.environ.get("DATABASE_URL")
+if raw_database_url and raw_database_url.strip():
+    clean_db_url = _sanitize_db_url(raw_database_url)
     DATABASES = {
         "default": dj_database_url.parse(
-            database_url,
+            clean_db_url,
             conn_max_age=600,
             conn_health_checks=True,
             ssl_require=os.environ.get("DB_SSL_REQUIRE", "true").lower()

@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Explore activities — LessonLoop{% endblock %}
+{% block title %}Explore activities — Quizz-Al-Din{% endblock %}
 {% block body_class %}page-browse{% endblock %}
 
 {% block content %}
@@ -32,7 +32,7 @@
             <span class="card-count">Interactive</span>
           </div>
           <div class="library-card-body">
-            <div class="card-meta"><span>PUBLIC</span><span>{{ activity.author.get_full_name|default:activity.author.email|default:'LessonLoop' }}</span></div>
+            <div class="card-meta"><span>PUBLIC</span><span>{{ activity.author.get_full_name|default:activity.author.email|default:'Quizz-Al-Din' }}</span></div>
             <h2>{{ activity.title }}</h2>
             <p>{% if activity.description %}{{ activity.description|truncatechars:110 }}{% else %}A short, shareable activity designed to get learners thinking out loud.{% endif %}</p>
             <div class="card-footer"><span class="avatar-tiny">{{ activity.author.get_full_name|default:activity.author.email|default:'L'|slice:':1'|upper }}</span><span>Ready to explore</span><a href="{% if user.is_authenticated %}{% if user.role == 'STUDENT' %}{% url 'student_activity_play' activity.pk %}{% else %}{% url 'teacher_dashboard' %}{% endif %}{% else %}{% url 'login' %}{% endif %}" aria-label="Open {{ activity.title }}">Open <b>→</b></a></div>

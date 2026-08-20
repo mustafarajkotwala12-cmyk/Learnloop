@@ -1,13 +1,13 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Welcome back — LessonLoop{% endblock %}
+{% block title %}Welcome back — Quizz-Al-Din{% endblock %}
 {% block body_class %}page-login{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
 <section class="auth-layout">
   <aside class="auth-aside">
-    <a class="brand brand-on-dark" href="{% url 'landing' %}"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Lesson<span>Loop</span></span></a>
+    <a class="brand brand-on-dark" href="{% url 'landing' %}"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>Quizz-<span>Al-Din</span></span></a>
     <div class="auth-aside-copy"><p class="eyebrow eyebrow-light">Learning, together</p><h1>A lesson is better when every voice has a way in.</h1><div class="auth-aside-quote"><span>“</span><p>The easiest way I’ve found to turn a quiet room into an active one.</p></div></div>
     <div class="auth-spark spark-a"></div><div class="auth-spark spark-b"></div><div class="auth-spark spark-c"></div>
   </aside>
@@ -16,7 +16,7 @@
       <a class="back-link" href="{% url 'landing' %}">← Back to home</a>
       <div class="auth-intro">
         {% if mode == 'register' %}
-          <p class="eyebrow">Join LessonLoop</p><h2>Make your learning space.</h2><p>Choose how you’ll use LessonLoop, then you’re ready to begin.</p>
+          <p class="eyebrow">Join Quizz-Al-Din</p><h2>Make your learning space.</h2><p>Choose how you’ll use Quizz-Al-Din, then you’re ready to begin.</p>
         {% else %}
           <p class="eyebrow">Welcome back</p><h2>Sign in to continue.</h2><p>Pick up right where the learning left off.</p>
         {% endif %}

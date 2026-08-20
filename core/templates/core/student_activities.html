@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Activities — LessonLoop{% endblock %}
+{% block title %}Activities — Quizz-Al-Din{% endblock %}
 {% block body_class %}page-portal page-student-activities{% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
       {% for activity in activities %}
         <article class="activity-choice-card activity-choice-tone-{{ forloop.counter }}">
           <div class="choice-card-top"><span class="choice-symbol">{% cycle '✦' '◒' '⌁' '△' %}</span>{% if activity.pk in completed_ids %}<span class="complete-chip">✓ Completed</span>{% else %}<span class="topic-chip">Interactive</span>{% endif %}</div>
-          <div class="choice-card-copy"><p>{% if activity.author.get_full_name %}By {{ activity.author.get_full_name }}{% else %}LessonLoop activity{% endif %}</p><h2>{{ activity.title }}</h2><span>{% if activity.description %}{{ activity.description|truncatechars:100 }}{% else %}Take this short activity at a pace that suits you.{% endif %}</span></div>
+          <div class="choice-card-copy"><p>{% if activity.author.get_full_name %}By {{ activity.author.get_full_name }}{% else %}Quizz-Al-Din activity{% endif %}</p><h2>{{ activity.title }}</h2><span>{% if activity.description %}{{ activity.description|truncatechars:100 }}{% else %}Take this short activity at a pace that suits you.{% endif %}</span></div>
           <a class="choice-card-link" href="{% url 'student_activity_play' activity.pk %}">{% if activity.pk in completed_ids %}Try again{% else %}Start activity{% endif %} <b>→</b></a>
         </article>
       {% empty %}

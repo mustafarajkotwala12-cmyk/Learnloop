@@ -1,29 +1,32 @@
-/* LessonLoop: shared UI language */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;800&display=swap');
+
+/* Quizz-Al-Din: shared UI language */
 :root {
-  --ink: #172036;
-  --ink-soft: #4f5a72;
-  --ink-faint: #78829a;
+  --ink: #1A1F16;
+  --ink-soft: #475240;
+  --ink-faint: #7A8572;
   --paper: #ffffff;
-  --canvas: #f7f7fb;
-  --canvas-deep: #ececf6;
-  --line: #e4e5ef;
-  --indigo: #5046e5;
-  --indigo-deep: #3830b9;
-  --indigo-pale: #ecebff;
-  --mint: #b8eed5;
-  --mint-deep: #147e63;
-  --sun: #ffcf61;
-  --rose: #ffb4c6;
-  --lavender: #d8d2ff;
-  --danger: #c2365b;
-  --success: #13785a;
-  --radius-sm: 12px;
-  --radius: 20px;
-  --radius-lg: 30px;
+  --canvas: #F8F9F5;
+  --canvas-deep: #EBECE4;
+  --line: #DFE2D6;
+  --indigo: #007A5E;
+  --indigo-deep: #005944;
+  --indigo-pale: #E0F2EC;
+  --mint: #B5E8D5;
+  --mint-deep: #167A5D;
+  --sun: #D4AF37;
+  --rose: #E58C8C;
+  --lavender: #C4E3D5;
+  --danger: #C0392B;
+  --success: #27AE60;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 24px;
   --shell: 1180px;
-  --shadow: 0 14px 38px rgba(34, 36, 74, .08);
-  --shadow-soft: 0 8px 25px rgba(34, 36, 74, .07);
+  --shadow: 0 14px 38px rgba(26, 31, 22, .08);
+  --shadow-soft: 0 8px 25px rgba(26, 31, 22, .07);
   --font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: 'Amiri', serif;
 }
 
 * { box-sizing: border-box; }
@@ -36,7 +39,7 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; }
 img { display: block; max-width: 100%; }
 h1, h2, h3, p { margin-top: 0; }
-h1, h2, h3 { color: var(--ink); line-height: 1.08; letter-spacing: -.04em; }
+h1, h2, h3 { font-family: var(--font-heading); color: var(--ink); line-height: 1.15; letter-spacing: 0; }
 h1 { font-size: clamp(2.55rem, 5.7vw, 5.25rem); }
 h2 { font-size: clamp(1.85rem, 3.4vw, 3.1rem); }
 h3 { font-size: 1.05rem; }

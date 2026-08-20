@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{% block title %}LessonLoop — make every lesson interactive{% endblock %}
+{% block title %}Quizz-Al-Din — make every lesson interactive{% endblock %}
 {% block body_class %}page-landing{% endblock %}
 
 {% block content %}
@@ -56,7 +56,7 @@
     <div class="section-heading centered">
       <p class="eyebrow">A better learning rhythm</p>
       <h2>Designed to keep attention moving.</h2>
-      <p>Every part of LessonLoop does one useful thing well—so a great activity never needs a complicated setup.</p>
+      <p>Every part of Quizz-Al-Din does one useful thing well—so a great activity never needs a complicated setup.</p>
     </div>
     <div class="steps-grid">
       <article class="step-card"><span class="step-number">01</span><div class="step-icon icon-lilac">✎</div><h3>Build a spark</h3><p>Mix prompts, media, and quick checks into a focused activity.</p></article>
@@ -76,7 +76,7 @@
       {% for activity in featured_activities|slice:':3' %}
         <article class="showcase-card showcase-tone-{{ forloop.counter }}">
           <div class="showcase-card-top"><span class="topic-chip">Interactive activity</span><span>↗</span></div>
-          <div><p>BY {{ activity.author.get_full_name|default:activity.author.email|default:'LESSONLOOP'|upper }}</p><h3>{{ activity.title }}</h3></div>
+          <div><p>BY {{ activity.author.get_full_name|default:activity.author.email|default:'QUIZZ-AL-DIN'|upper }}</p><h3>{{ activity.title }}</h3></div>
           <a href="{% url 'browse' %}" aria-label="Explore {{ activity.title }}"></a>
         </article>
       {% empty %}
@@ -91,7 +91,7 @@
 <section class="section quote-section">
   <div class="shell quote-layout">
     <div class="quote-mark">“</div>
-    <blockquote>It feels less like presenting a lesson and more like inviting every student into the conversation.</blockquote>
+    <blockquote>It feels less like presenting a quiz and more like inviting every student into the conversation.</blockquote>
     <div class="quote-person"><span class="person-avatar">SR</span><span><b>Samira Rahman</b><small>Year 7 teacher</small></span></div>
   </div>
 </section>

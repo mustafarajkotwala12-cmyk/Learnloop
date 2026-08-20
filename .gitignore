@@ -9,3 +9,4 @@ staticfiles/
 coverage.xml
 htmlcov/
 .vscode/
+.build_venv/

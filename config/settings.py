@@ -15,6 +15,8 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() in {"1", "true", "yes"}
 
 raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,testserver")
 ALLOWED_HOSTS = [host.strip() for host in raw_hosts.split(",") if host.strip()]
+if ".vercel.app" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".vercel.app")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -77,7 +79,7 @@ if database_url:
         )
     }
     # Vercel-specific fix: Ensure options is initialized if it wasn't by dj_database_url
-if os.environ.get("VERCEL"):
+    if os.environ.get("VERCEL"):
         if "OPTIONS" not in DATABASES["default"]:
             DATABASES["default"]["OPTIONS"] = {}
         DATABASES["default"]["OPTIONS"]["connect_timeout"] = 5
@@ -128,6 +130,8 @@ CSRF_TRUSTED_ORIGINS = [
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+if "https://*.vercel.app" not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "false").lower() in {

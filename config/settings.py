@@ -67,38 +67,54 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # Supabase provides a standard PostgreSQL connection URL. SQLite keeps a fresh
 # clone useful without any cloud credentials.
-def _sanitize_db_url(raw_url: str) -> str:
-    """Sanitizes unescaped characters (such as @ or brackets in password) in database URLs."""
-    url = raw_url.strip()
+def _parse_database_url(raw_url: str):
+    """Safely sanitizes and parses the database URL, falling back gracefully to SQLite if invalid."""
     import re
     import urllib.parse
+
+    url = (raw_url or "").strip().strip("\"'")
+    if not url:
+        return None
+
+    # Handle accidental missing scheme or leading colon
+    if url.startswith("://"):
+        url = "postgresql" + url
+    elif not any(url.startswith(s) for s in ("postgres://", "postgresql://", "sqlite://", "mysql://")):
+        if "://" not in url and "@" in url:
+            url = "postgresql://" + url
+
+    # Auto-sanitize unescaped @ or bracket placeholders in password
     match = re.match(r"^(postgres(?:ql)?://)([^:]+):(.*)@([^@/:]+)(?::(\d+))?/(.*)$", url)
     if match:
         proto, user, pwd, host, port, dbname = match.groups()
         if pwd.startswith("[") and pwd.endswith("]"):
             pwd = pwd[1:-1]
-        quoted_pwd = urllib.parse.quote(pwd)
+        pwd = pwd.strip("\"'")
+        quoted_pwd = urllib.parse.quote(urllib.parse.unquote(pwd))
         port_part = f":{port}" if port else ""
-        return f"{proto}{user}:{quoted_pwd}@{host}{port_part}/{dbname}"
-    return url
+        url = f"{proto}{user}:{quoted_pwd}@{host}{port_part}/{dbname}"
 
-raw_database_url = os.environ.get("SUPABASE_DB_URL") or os.environ.get("DATABASE_URL")
-if raw_database_url and raw_database_url.strip():
-    clean_db_url = _sanitize_db_url(raw_database_url)
-    DATABASES = {
-        "default": dj_database_url.parse(
-            clean_db_url,
+    try:
+        parsed = dj_database_url.parse(
+            url,
             conn_max_age=600,
             conn_health_checks=True,
             ssl_require=os.environ.get("DB_SSL_REQUIRE", "true").lower()
             in {"1", "true", "yes"},
         )
-    }
-    # Vercel-specific fix: Ensure options is initialized if it wasn't by dj_database_url
-    if os.environ.get("VERCEL"):
-        if "OPTIONS" not in DATABASES["default"]:
-            DATABASES["default"]["OPTIONS"] = {}
-        DATABASES["default"]["OPTIONS"]["connect_timeout"] = 5
+        if os.environ.get("VERCEL"):
+            if "OPTIONS" not in parsed:
+                parsed["OPTIONS"] = {}
+            parsed["OPTIONS"]["connect_timeout"] = 5
+        return parsed
+    except Exception as exc:
+        # Gracefully handle any formatting error so serverless deployment does not crash
+        return None
+
+raw_database_url = os.environ.get("SUPABASE_DB_URL") or os.environ.get("DATABASE_URL")
+parsed_db = _parse_database_url(raw_database_url)
+if parsed_db:
+    DATABASES = {"default": parsed_db}
 else:
     DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
 
